@@ -1,0 +1,92 @@
+import org.akhikhl.gretty.GrettyPlugin
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'war'
+apply plugin: GrettyPlugin
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+ext {
+    buildCount = System.getenv("BUILD_COUNT") ?: '0'
+    projectVersion = "0.0.${buildCount}"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.akhikhl.gretty:gretty:latest.release"
+    }
+}
+
+war {
+    archiveName = "study-spring.war"
+    destinationDir = file('out')
+    manifest {
+        attributes(
+                'Min-Java-Version': '1.8.0',
+        )
+    }
+}
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
+
+gretty {
+    servletContainer = 'jetty9'
+    contextPath = ''
+    scanInterval = 1
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
+}
+
+dependencies {
+    compile 'javax.servlet:javax.servlet-api:latest.release',
+            'javax.servlet.jsp:jsp-api:latest.release',
+            'org.aspectj:aspectjtools:latest.release',
+            'org.freemarker:freemarker:latest.release',
+            'org.springframework:spring-webmvc:latest.release',
+            'org.springframework:spring-context:latest.release',
+            'org.springframework:spring-context-support:latest.release',
+            'org.springframework:spring-jdbc:latest.release',
+            'org.springframework:spring-orm:latest.release',
+            'org.springframework:spring-tx:latest.release',
+            'commons-fileupload:commons-fileupload:latest.release',
+            'ch.qos.logback:logback-classic:latest.release',
+            'ch.qos.logback:logback-core:latest.release',
+            'org.slf4j:slf4j-api:latest.release',
+            'org.slf4j:log4j-over-slf4j:latest.release',
+            'org.slf4j:jcl-over-slf4j:latest.release',
+            'org.hibernate:hibernate-core:latest.release',
+            'org.hibernate:hibernate-entitymanager:latest.release',
+            'org.hibernate:hibernate-c3p0:latest.release',
+            'org.hibernate:hibernate-validator:latest.release',
+            'org.apache.derby:derbyclient:latest.release',
+            'com.fasterxml.jackson.core:jackson-core:latest.release',
+            'com.fasterxml.jackson.core:jackson-databind:latest.release',
+            'com.fasterxml.jackson.core:jackson-annotations:latest.release',
+            'org.glassfish:javax.el:latest.release'
+    testCompile 'junit:junit:latest.release',
+            'org.hamcrest:hamcrest-all:latest.release',
+            "org.springframework:spring-test:latest.release"
+}

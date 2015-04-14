@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define a bean, 'depends-on' means create 'mom' instance first -->
+    <bean id="person" class="edu.alvin.spring.xmlconf.beans.Person" scope="prototype" depends-on="mom">
+        <property name="id" value="100"/>
+        <property name="age" value="22"/>
+        <property name="gender" value="M"/>
+        <property name="name" value="Alvin"/>
+        <!-- Set bean property as Map type -->
+        <property name="parents">
+            <map>
+                <!-- First entry, include a bean instance-->
+                <entry key="dad">
+                    <bean class="edu.alvin.spring.xmlconf.beans.Person">
+                        <!-- Use constructor to instance the bean -->
+                        <constructor-arg name="id" value="101"/>
+                        <constructor-arg name="name" value="Tom"/>
+                        <constructor-arg name="gender" value="M"/>
+                        <constructor-arg name="age" value="52"/>
+                    </bean>
+                </entry>
+                <!-- Second entry, reference to a ben instance -->
+                <entry key="mom" value-ref="mom"/>
+            </map>
+        </property>
+        <!-- Set bean property as List(Set) type -->
+        <property name="skills">
+            <list>
+                <!-- First element, bean instance -->
+                <bean class="edu.alvin.spring.xmlconf.beans.Skill">
+                    <property name="name" value="programming"/>
+                    <property name="years" value="3"/>
+                </bean>
+                <!-- Second element, bean reference -->
+                <ref bean="skillCook"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Use factory method to instance bean -->
+    <bean id="mom" class="edu.alvin.spring.xmlconf.beans.Person" factory-method="of">
+        <!-- arguments of factory method -->
+        <constructor-arg name="id" value="102"/>
+        <constructor-arg name="name" value="Lily"/>
+        <constructor-arg name="gender" value="F"/>
+        <constructor-arg name="age" value="50"/>
+    </bean>
+
+    <!-- Reference by 'skills property' of 'person bean' -->
+    <bean id="skillCook" class="edu.alvin.spring.xmlconf.beans.Skill">
+        <property name="name" value="Cook"/>
+        <property name="years" value="5"/>
+    </bean>
+</beans>

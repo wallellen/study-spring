@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="interceptorAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <bean class="edu.alvin.spring.xmlconf.advices.InterceptorAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <array>
+                <value>interceptorBefore**</value>
+                <value>interceptorAfterReturning**</value>
+                <value>interceptorThrows**</value>
+                <value>interceptorAround**</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="interceptorTarget" class="edu.alvin.spring.xmlconf.beans.InterceptorTarget"/>
+    <bean id="aspectTarget" class="edu.alvin.spring.xmlconf.beans.AspectTarget"/>
+
+    <bean id="advice" class="edu.alvin.spring.xmlconf.advices.AspectAdvice"/>
+    <aop:config>
+        <aop:aspect ref="advice">
+            <aop:pointcut id="pointCut" expression="execution(* edu.alvin.spring.xmlconf.beans.AspectTarget.*(..))"/>
+            <aop:before pointcut-ref="pointCut" method="before"/>
+            <aop:after pointcut-ref="pointCut" method="after"/>
+            <aop:around pointcut-ref="pointCut" method="around"/>
+            <aop:after-throwing pointcut-ref="pointCut" method="except" throwing="ex"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!--
+    <bean id="interceptorAdvice" class="edu.alvin.spring.configure.advice.InterceptorAdvice"/>
+    <aop:config>
+        <aop:pointcut id="pointCut" expression="execution(* edu.alvin.spring.configure.bean.AspectTarget.*(..))"/>
+        <aop:advisor advice-ref="interceptorAdvice" pointcut-ref="pointCut"/>
+    </aop:config>
+    -->
+</beans>

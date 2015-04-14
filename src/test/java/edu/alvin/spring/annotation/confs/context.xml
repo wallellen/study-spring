@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- Convection service to convert string value to expected type -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="edu.alvin.core.spring.convs.LocalDateTimeConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <!-- Auto scan the ioc -->
+    <context:component-scan base-package="edu.alvin.spring.annotation">
+        <!--<context:include-filter type="regex" expression=""/>-->
+        <!--<context:exclude-filter type="regex" expression=""/>-->
+    </context:component-scan>
+
+    <aop:aspectj-autoproxy/>
+</beans>
